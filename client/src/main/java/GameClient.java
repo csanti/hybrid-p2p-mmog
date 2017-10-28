@@ -1,3 +1,4 @@
+import com.sun.javafx.scene.layout.region.Margins;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -14,7 +15,20 @@ public class GameClient {
 
     public static void main(final String[] args) {
         logger.info("Entry point");
-        new GameClient("localhost", 8182).run();
+        int numClients = 1;
+
+        if (args.length == 0) {
+            logger.info("No has introducido argumentos");
+        }
+        else {
+            numClients = Integer.parseInt(args[0]);
+        }
+
+        for(int i = 0; i < numClients; i++) {
+            logger.info("Iniciando cliente nº"+i);
+            new GameClient("localhost", 8182).run();
+        }
+
     }
 
 
@@ -30,8 +44,6 @@ public class GameClient {
             Bootstrap bootstrap = new Bootstrap().group(group).channel(NioSocketChannel.class).handler(new GameClientInitializer());
 
             Channel channel = bootstrap.connect(this.host, this.port).sync().channel();
-
-            channel.write("hola\r\n");
 
             channel.flush();
         }

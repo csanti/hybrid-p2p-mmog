@@ -1,12 +1,12 @@
-package edu.upc.tfg.server;
+package edu.upc.tfg.common.packets;
 
 import io.netty.buffer.ByteBuf;
 
 public class GamePacket {
     private int id;
-    private byte[] payload;
+    private ByteBuf payload;
 
-    public GamePacket(int id, byte[] payload) {
+    public GamePacket(int id, ByteBuf payload) {
         this.id = id;
         this.payload = payload;
     }
@@ -15,7 +15,7 @@ public class GamePacket {
         return id;
     }
 
-    public byte[] getPayload() {
+    public ByteBuf getPayload() {
         return payload;
     }
 }

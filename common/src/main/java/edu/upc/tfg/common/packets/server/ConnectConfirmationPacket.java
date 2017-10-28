@@ -1,13 +1,11 @@
-package edu.upc.tfg.common.packets.client;
+package edu.upc.tfg.common.packets.server;
 
 import edu.upc.tfg.common.Connection;
-import edu.upc.tfg.common.packets.ClientPacket;
 import edu.upc.tfg.common.GameMessage;
+import edu.upc.tfg.common.packets.ServerPacket;
 import io.netty.buffer.ByteBuf;
-import org.apache.log4j.Logger;
 
-public class HelloPacket extends ClientPacket {
-    private static final Logger logger = Logger.getLogger(HelloPacket.class.getName());
+public class ConnectConfirmationPacket extends ServerPacket {
 
 
     @Override
@@ -22,6 +20,6 @@ public class HelloPacket extends ClientPacket {
 
     @Override
     public void handle(Connection conn) {
-        logger.info("Hello");
+
     }
 }

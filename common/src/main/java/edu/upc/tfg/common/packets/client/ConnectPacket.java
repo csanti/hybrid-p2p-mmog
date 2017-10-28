@@ -2,7 +2,8 @@ package edu.upc.tfg.common.packets.client;
 
 import edu.upc.tfg.common.Connection;
 import edu.upc.tfg.common.packets.ClientPacket;
-import edu.upc.tfg.common.packets.GamePacket;
+import edu.upc.tfg.common.GameMessage;
+import edu.upc.tfg.common.packets.PacketMapping;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -23,10 +24,10 @@ public class ConnectPacket extends ClientPacket {
     }
 
     @Override
-    public GamePacket write() {
+    public GameMessage write() {
         // pasar el clientname a bytes y copiarlo a payload
         this.payload = Unpooled.wrappedBuffer(clientName.getBytes());
-        return new GamePacket(0x01, this.payload);
+        return buildGameMessage(this.getClass());
     }
 
     @Override

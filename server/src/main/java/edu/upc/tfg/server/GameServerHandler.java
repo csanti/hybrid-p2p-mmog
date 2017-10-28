@@ -2,7 +2,7 @@ package edu.upc.tfg.server;
 
 import edu.upc.tfg.common.Connection;
 import edu.upc.tfg.common.packets.ClientPacket;
-import edu.upc.tfg.common.packets.GamePacket;
+import edu.upc.tfg.common.GameMessage;
 import edu.upc.tfg.common.packets.PacketMapping;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -21,12 +21,18 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("Channel read");
-        GamePacket packet = (GamePacket) msg;
+        GameMessage packet = (GameMessage) msg;
         logger.info("Message received: "+packet.getId()+" Size: "+ packet.getPayload().capacity()+" - "+DatatypeConverter.printHexBinary(packet.getPayload().array()));
 
-        ClientPacket cp = PacketMapping.clientPackets.get(packet.getId()).newInstance();
-        cp.read(packet.getPayload());
-        cp.handle(conn);
+        if(PacketMapping.clientIdPacketMap.containsKey(packet.getId())) {
+            ClientPacket cp = PacketMapping.clientIdPacketMap.get(packet.getId()).newInstance();
+            cp.read(packet.getPayload());
+            cp.handle(conn);
+        }
+        else {
+            logger.warn("Unknown packetid - "+packet.getId());
+        }
+
     }
 
 
@@ -48,7 +54,7 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
         logger.info("Client disconnected "+ctx.channel().remoteAddress()+" Total clients connected: "+connections.size());
     }
     
-    public static void sendAll(String from, GamePacket gamePacket) {
+    public static void sendAll(String from, GameMessage gamePacket) {
         for (Connection con: connections) {
             if(!con.getUsername().equals(from)) {
                 con.getCtx().channel().writeAndFlush(gamePacket);

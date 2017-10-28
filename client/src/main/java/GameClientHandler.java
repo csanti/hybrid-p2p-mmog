@@ -1,4 +1,4 @@
-import edu.upc.tfg.common.packets.GamePacket;
+import edu.upc.tfg.common.GameMessage;
 import edu.upc.tfg.common.packets.client.ConnectPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -18,8 +18,8 @@ public class GameClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         logger.info("Conectado");
-        byte[] array = {0x00};
-        ctx.write(new GamePacket(0x00, Unpooled.copiedBuffer(array)));
+        //byte[] array = {0x00};
+        //ctx.write(new GameMessage(0x00, Unpooled.copiedBuffer(array)));
         ctx.write(new ConnectPacket("bot").write());
         ctx.flush();
     }

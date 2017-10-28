@@ -5,8 +5,8 @@ import edu.upc.tfg.common.GameMessage;
 import io.netty.buffer.ByteBuf;
 import org.apache.log4j.Logger;
 
-public abstract class ClientPacket {
-    private static final Logger logger = Logger.getLogger(ClientPacket.class.getName());
+public abstract class ServerPacket {
+    private static final Logger logger = Logger.getLogger(ServerPacket.class.getName());
 
     protected ByteBuf payload;
 
@@ -27,6 +27,4 @@ public abstract class ClientPacket {
         //devuelve un packete con id 0
         return new GameMessage(msgId, payload);
     }
-
-
 }

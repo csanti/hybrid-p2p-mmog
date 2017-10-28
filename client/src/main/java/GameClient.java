@@ -1,4 +1,5 @@
 import com.sun.javafx.scene.layout.region.Margins;
+import edu.upc.tfg.common.packets.PacketMapping;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -21,6 +22,8 @@ public class GameClient {
         else {
             numClients = Integer.parseInt(args[0]);
         }
+
+        PacketMapping.mapClientPackets();
 
         for(int i = 0; i < numClients; i++) {
             logger.info("Iniciando cliente nº"+i);

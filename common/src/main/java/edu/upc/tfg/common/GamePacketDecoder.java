@@ -13,7 +13,7 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         int packetLenght = byteBuf.capacity();
         if(packetLenght > 0) {
-            list.add(new GamePacket(byteBuf.readByte(), byteBuf.readBytes(byteBuf.readableBytes())));
+            list.add(new GamePacket(byteBuf.readInt(), byteBuf.readBytes(byteBuf.readableBytes())));
         }
 
     }

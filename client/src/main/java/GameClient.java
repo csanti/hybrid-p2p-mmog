@@ -10,12 +10,10 @@ import org.apache.log4j.Logger;
 public class GameClient {
     private static final Logger logger = Logger.getLogger(GameClientHandler.class.getName());
 
-    private final String host;
-    private final int port;
 
     public static void main(final String[] args) {
         logger.info("Entry point");
-        int numClients = 1;
+        int numClients = 3;
 
         if (args.length == 0) {
             logger.info("No has introducido argumentos");
@@ -26,32 +24,9 @@ public class GameClient {
 
         for(int i = 0; i < numClients; i++) {
             logger.info("Iniciando cliente nº"+i);
-            new GameClient("localhost", 8182).run();
+            new SimpleBot("localhost", 8182).run();
         }
 
     }
 
-
-    public GameClient(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    public void run() {
-        EventLoopGroup group = new NioEventLoopGroup();
-
-        try {
-            Bootstrap bootstrap = new Bootstrap().group(group).channel(NioSocketChannel.class).handler(new GameClientInitializer());
-
-            Channel channel = bootstrap.connect(this.host, this.port).sync().channel();
-
-            channel.flush();
-        }
-        catch (Exception e) {
-            logger.error("Client error: ", e);
-        }
-        finally {
-            group.shutdownGracefully();
-        }
-    }
 }

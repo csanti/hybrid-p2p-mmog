@@ -18,4 +18,5 @@ public class GamePacket {
     public ByteBuf getPayload() {
         return payload;
     }
+
 }

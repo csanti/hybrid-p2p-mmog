@@ -1,11 +1,12 @@
 package edu.upc.tfg.common.packets.client;
 
-import edu.upc.tfg.common.packets.Packet;
+import edu.upc.tfg.common.Connection;
+import edu.upc.tfg.common.packets.ClientPacket;
+import edu.upc.tfg.common.packets.GamePacket;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
-public class ConnectPacket extends Packet {
-
-    private ByteBuf payload;
+public class ConnectPacket extends ClientPacket {
 
     private String clientName;
 
@@ -18,11 +19,18 @@ public class ConnectPacket extends Packet {
 
     @Override
     public void read(ByteBuf payload) throws Exception{
-        clientName = new String(payload.slice(0,20).array(), "UTF-8");
+        clientName = new String(payload.array(), "UTF-8");
     }
 
     @Override
-    public void write() {
+    public GamePacket write() {
+        // pasar el clientname a bytes y copiarlo a payload
+        this.payload = Unpooled.wrappedBuffer(clientName.getBytes());
+        return new GamePacket(0x01, this.payload);
+    }
 
+    @Override
+    public void handle(Connection conn) {
+        conn.setUsername(clientName);
     }
 }

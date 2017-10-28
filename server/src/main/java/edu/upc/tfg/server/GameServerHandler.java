@@ -1,38 +1,32 @@
 package edu.upc.tfg.server;
 
+import edu.upc.tfg.common.Connection;
+import edu.upc.tfg.common.packets.ClientPacket;
 import edu.upc.tfg.common.packets.GamePacket;
+import edu.upc.tfg.common.packets.PacketMapping;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.DatatypeConverter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameServerHandler extends ChannelInboundHandlerAdapter {
-
     private static final Logger logger = Logger.getLogger(GameServerHandler.class.getName());
 
-/*
-    @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, GamePacket packet) throws Exception {
-        logger.info("Message received: "+packet.getId()+" "+ DatatypeConverter.printHexBinary(packet.getPayload().array()));
-        switch(packet.getId()) {
-            case 0x01:
-                new ConnectPacket().read(packet.getPayload());
-
-                break;
-            default:
-                logger.info("Packet id no identificado: "+packet.getId());
-                break;
-
-        }
-    }
-*/
+    public static List<Connection> connections = new ArrayList<Connection>();
+    public Connection conn;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("Channel read");
         GamePacket packet = (GamePacket) msg;
         logger.info("Message received: "+packet.getId()+" Size: "+ packet.getPayload().capacity()+" - "+DatatypeConverter.printHexBinary(packet.getPayload().array()));
+
+        ClientPacket cp = PacketMapping.clientPackets.get(packet.getId()).newInstance();
+        cp.read(packet.getPayload());
+        cp.handle(conn);
     }
 
 
@@ -43,11 +37,22 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        logger.info("Client connected "+ctx.channel().remoteAddress());
+        this.conn = new Connection(ctx);
+        connections.add(this.conn);
+        logger.info("Client connected "+ctx.channel().remoteAddress()+" Total clients connected: "+connections.size());
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        logger.info("Client disconnected "+ctx.channel().remoteAddress());
+        connections.remove(this.conn);
+        logger.info("Client disconnected "+ctx.channel().remoteAddress()+" Total clients connected: "+connections.size());
+    }
+    
+    public static void sendAll(String from, GamePacket gamePacket) {
+        for (Connection con: connections) {
+            if(!con.getUsername().equals(from)) {
+                con.getCtx().channel().writeAndFlush(gamePacket);
+            }
+        }
     }
 }

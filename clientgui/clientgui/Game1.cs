@@ -1,6 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using QuakeConsole;
+using System.Diagnostics;
+
+
+
+
 
 namespace clientgui
 {
@@ -9,12 +15,33 @@ namespace clientgui
     /// </summary>
     public class Game1 : Game
     {
+        public static StateController StateController;
+
+        public InputHandler InputHandler;
+
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        ConsoleComponent console;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            console = new ConsoleComponent(this)
+            {
+                Padding = 10.0f,
+                FontColor = Color.White,
+                InputPrefixColor = Color.White,
+                BackgroundColor = Color.Black * 0.7f,
+                BottomBorderThickness = 4.0f,
+                BottomBorderColor = Color.Red,
+                SelectionColor = Color.DarkGray,
+                LogInput = cmd => Debug.WriteLine(cmd) // Logs input commands to VS output window.
+            };
+            Components.Add(console);
+            Log.setIngameConsole(console);
             Content.RootDirectory = "Content";
         }
 
@@ -27,7 +54,8 @@ namespace clientgui
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            StateController = new StateController();
+            InputHandler = new InputHandler();            
             base.Initialize();
         }
 
@@ -40,7 +68,8 @@ namespace clientgui
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            StateController.pushState(new PlayState());
+            Log.Info("info");
         }
 
         /// <summary>
@@ -61,8 +90,11 @@ namespace clientgui
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                console.ToggleOpenClose();
 
-            // TODO: Add your update logic here
+            InputHandler.CheckKeyboardInputs();
+            StateController.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -75,7 +107,11 @@ namespace clientgui
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            StateController.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

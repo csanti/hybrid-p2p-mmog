@@ -1,6 +1,6 @@
 package edu.upc.tfg.server;
 
-import edu.upc.tfg.common.Connection;
+import edu.upc.tfg.common.ClientConnection;
 import edu.upc.tfg.common.packets.ClientPacket;
 import edu.upc.tfg.common.GameMessage;
 import edu.upc.tfg.common.packets.PacketMapping;
@@ -15,12 +15,11 @@ import java.util.List;
 public class GameServerHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = Logger.getLogger(GameServerHandler.class.getName());
 
-    public static List<Connection> connections = new ArrayList<Connection>();
-    public Connection conn;
+    public static List<ClientConnection> connections = new ArrayList<ClientConnection>();
+    public ClientConnection conn;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        logger.info("Channel read");
         GameMessage packet = (GameMessage) msg;
         logger.info("Message received: "+packet.getId()+" Size: "+ packet.getPayload().capacity()+" - "+DatatypeConverter.printHexBinary(packet.getPayload().array()));
 
@@ -43,7 +42,7 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        this.conn = new Connection(ctx);
+        this.conn = new ClientConnection(ctx);
         connections.add(this.conn);
         logger.info("Client connected "+ctx.channel().remoteAddress()+" Total clients connected: "+connections.size());
     }
@@ -55,10 +54,12 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
     }
     
     public static void sendAll(String from, GameMessage gamePacket) {
-        for (Connection con: connections) {
+        /*
+        for (ClientConnection con: connections) {
             if(!con.getUsername().equals(from)) {
                 con.getCtx().channel().writeAndFlush(gamePacket);
             }
         }
+        */
     }
 }

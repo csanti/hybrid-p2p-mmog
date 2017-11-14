@@ -1,8 +1,9 @@
 package edu.upc.tfg.common.packets;
 
-import edu.upc.tfg.common.Connection;
+import edu.upc.tfg.common.ClientConnection;
 import edu.upc.tfg.common.GameMessage;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 
 public abstract class ServerPacket {
@@ -12,13 +13,13 @@ public abstract class ServerPacket {
 
     public abstract void read(ByteBuf payload) throws Exception;
     public abstract GameMessage write();
-    public abstract void handle(Connection conn);
+    public abstract void handle(ChannelHandlerContext ctx);
 
-    public GameMessage buildGameMessage(Class<? extends ClientPacket> packetType) {
+    public GameMessage buildGameMessage(Class<? extends ServerPacket> packetType) {
         int msgId = 0;
 
-        if(PacketMapping.clientPacketIdMap.containsKey(packetType)) {
-            msgId = PacketMapping.clientPacketIdMap.get(packetType);
+        if(PacketMapping.serverPacketIdMap.containsKey(packetType)) {
+            msgId = PacketMapping.serverPacketIdMap.get(packetType);
         }
         else {
             logger.error("Packetid not found");

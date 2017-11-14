@@ -1,8 +1,11 @@
 package edu.upc.tfg.common.packets;
 
+import edu.upc.tfg.common.packets.client.CPlayerPosUpdatePacket;
 import edu.upc.tfg.common.packets.client.ConnectPacket;
 import edu.upc.tfg.common.packets.client.HelloPacket;
-import edu.upc.tfg.common.packets.server.ConnectConfirmationPacket;
+import edu.upc.tfg.common.packets.server.NewEntityPacket;
+import edu.upc.tfg.common.packets.server.SPlayerPosUpdatePacket;
+import edu.upc.tfg.common.packets.server.SpawnPositionPacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +23,17 @@ public class PacketMapping {
         clientPacketIdMap.put(ConnectPacket.class, 0x02);
         clientIdPacketMap.put(0x01, HelloPacket.class);
         clientPacketIdMap.put(HelloPacket.class, 0x01);
+        clientIdPacketMap.put(0x07, CPlayerPosUpdatePacket.class);
+        clientPacketIdMap.put(CPlayerPosUpdatePacket.class, 0x07);
     }
 
     public static void mapServerPackets() {
-        serverIdPacketMap.put(0x01, ConnectConfirmationPacket.class);
-        serverPacketIdMap.put(ConnectConfirmationPacket.class, 0x01);
+
+        serverIdPacketMap.put(0x03, SpawnPositionPacket.class);
+        serverPacketIdMap.put(SpawnPositionPacket.class, 0x03);
+        serverIdPacketMap.put(0x04, NewEntityPacket.class);
+        serverPacketIdMap.put(NewEntityPacket.class, 0x04);
+        serverIdPacketMap.put(0x05, SPlayerPosUpdatePacket.class);
+        serverPacketIdMap.put(SPlayerPosUpdatePacket.class, 0x05);
     }
 }

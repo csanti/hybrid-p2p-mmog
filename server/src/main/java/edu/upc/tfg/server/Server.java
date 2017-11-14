@@ -4,6 +4,7 @@ import edu.upc.tfg.common.packets.PacketMapping;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -15,6 +16,7 @@ public class Server {
     public static void main(final String[] args) throws Exception {
         logger.info("Entry point");
         PacketMapping.mapClientPackets();
+        PacketMapping.mapServerPackets();
 
         new Server().run(8182);
     }

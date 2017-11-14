@@ -1,6 +1,6 @@
 package edu.upc.tfg.common.packets;
 
-import edu.upc.tfg.common.Connection;
+import edu.upc.tfg.common.ClientConnection;
 import edu.upc.tfg.common.GameMessage;
 import io.netty.buffer.ByteBuf;
 import org.apache.log4j.Logger;
@@ -12,7 +12,7 @@ public abstract class ClientPacket {
 
     public abstract void read(ByteBuf payload) throws Exception;
     public abstract GameMessage write();
-    public abstract void handle(Connection conn);
+    public abstract void handle(ClientConnection conn);
 
     public GameMessage buildGameMessage(Class<? extends ClientPacket> packetType) {
         int msgId = 0;

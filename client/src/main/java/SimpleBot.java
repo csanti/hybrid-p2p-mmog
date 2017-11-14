@@ -1,5 +1,6 @@
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -28,11 +29,11 @@ public class SimpleBot {
         }
         catch (Exception e) {
             logger.error("Client error: ", e);
-        }
-        finally {
             group.shutdownGracefully();
         }
     }
+
+
 
 
 }

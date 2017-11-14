@@ -5,6 +5,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 
 public class GameClientInitializer extends ChannelInitializer<SocketChannel> {
     @Override
@@ -12,10 +13,10 @@ public class GameClientInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = socketChannel.pipeline();
 
         //pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.nulDelimiter()));
-
+        pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(30));
         pipeline.addLast("decoder", new GamePacketDecoder());
         pipeline.addLast("encoder", new GamePacketEncoder());
 
-        pipeline.addLast("handler", new GameClientHandler());
+        pipeline.addLast(new GameClientHandler());
     }
 }

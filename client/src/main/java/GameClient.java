@@ -14,7 +14,7 @@ public class GameClient {
 
     public static void main(final String[] args) {
         logger.info("Entry point");
-        int numClients = 3;
+        int numClients = 2;
 
         if (args.length == 0) {
             logger.info("No has introducido argumentos");
@@ -24,11 +24,18 @@ public class GameClient {
         }
 
         PacketMapping.mapClientPackets();
+        PacketMapping.mapServerPackets();
 
-        for(int i = 0; i < numClients; i++) {
-            logger.info("Iniciando cliente nº"+i);
-            new SimpleBot("localhost", 8182).run();
+        try {
+            for(int i = 0; i < numClients; i++) {
+                logger.info("Iniciando cliente nº"+i);
+                new SimpleBot("localhost", 8182).run();
+                Thread.sleep(10000);
+            }
+        } catch(Exception ex) {
+            logger.error("Error ", ex);
         }
+
 
     }
 

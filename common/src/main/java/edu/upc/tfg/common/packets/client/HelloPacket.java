@@ -1,6 +1,6 @@
 package edu.upc.tfg.common.packets.client;
 
-import edu.upc.tfg.common.Connection;
+import edu.upc.tfg.common.ClientConnection;
 import edu.upc.tfg.common.packets.ClientPacket;
 import edu.upc.tfg.common.GameMessage;
 import io.netty.buffer.ByteBuf;
@@ -21,7 +21,7 @@ public class HelloPacket extends ClientPacket {
     }
 
     @Override
-    public void handle(Connection conn) {
+    public void handle(ClientConnection conn) {
         logger.info("Hello");
     }
 }

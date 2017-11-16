@@ -1,8 +1,8 @@
 package edu.upc.tfg.server;
 
 
-import edu.upc.tfg.common.GamePacketDecoder;
-import edu.upc.tfg.common.GamePacketEncoder;
+import edu.upc.tfg.core.GamePacketDecoder;
+import edu.upc.tfg.core.GamePacketEncoder;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

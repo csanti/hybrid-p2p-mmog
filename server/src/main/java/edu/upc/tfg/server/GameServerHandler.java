@@ -1,9 +1,11 @@
 package edu.upc.tfg.server;
 
-import edu.upc.tfg.common.ClientConnection;
-import edu.upc.tfg.common.packets.ClientPacket;
-import edu.upc.tfg.common.GameMessage;
-import edu.upc.tfg.common.packets.PacketMapping;
+import edu.upc.tfg.core.ClientConnection;
+import edu.upc.tfg.core.instances.MainInstance;
+import edu.upc.tfg.core.instances.MasterGameInstance;
+import edu.upc.tfg.core.packets.ClientPacket;
+import edu.upc.tfg.core.GameMessage;
+import edu.upc.tfg.core.packets.PacketMapping;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.log4j.Logger;
@@ -17,6 +19,11 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 
     public static List<ClientConnection> connections = new ArrayList<ClientConnection>();
     public ClientConnection conn;
+    private MasterGameInstance gameInstance;
+
+    public GameServerHandler(){
+        gameInstance = new MainInstance();
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -26,7 +33,7 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
         if(PacketMapping.clientIdPacketMap.containsKey(packet.getId())) {
             ClientPacket cp = PacketMapping.clientIdPacketMap.get(packet.getId()).newInstance();
             cp.read(packet.getPayload());
-            cp.handle(conn);
+            cp.handle(conn, gameInstance);
         }
         else {
             logger.warn("Unknown packetid - "+packet.getId());
@@ -51,15 +58,5 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         connections.remove(this.conn);
         logger.info("Client disconnected "+ctx.channel().remoteAddress()+" Total clients connected: "+connections.size());
-    }
-    
-    public static void sendAll(String from, GameMessage gamePacket) {
-        /*
-        for (ClientConnection con: connections) {
-            if(!con.getUsername().equals(from)) {
-                con.getCtx().channel().writeAndFlush(gamePacket);
-            }
-        }
-        */
     }
 }

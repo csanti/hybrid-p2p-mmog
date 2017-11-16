@@ -1,13 +1,9 @@
-import edu.upc.tfg.common.GameMessage;
-import edu.upc.tfg.common.gameclient.LocalWorld;
-import edu.upc.tfg.common.packets.PacketMapping;
-import edu.upc.tfg.common.packets.ServerPacket;
-import edu.upc.tfg.common.packets.client.ConnectPacket;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import edu.upc.tfg.core.GameMessage;
+import edu.upc.tfg.core.instances.LocalClientInstance;
+import edu.upc.tfg.core.packets.PacketMapping;
+import edu.upc.tfg.core.packets.ServerPacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.ReadTimeoutException;
 import org.apache.log4j.Logger;
 
@@ -16,6 +12,12 @@ import javax.xml.bind.DatatypeConverter;
 public class GameClientHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = Logger.getLogger(GameClientHandler.class.getName());
+    private String clientName;
+    private LocalClientInstance localClientInstance;
+
+    public GameClientHandler(String clientName) {
+        this.clientName = clientName;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -25,7 +27,11 @@ public class GameClientHandler extends ChannelInboundHandlerAdapter {
         if(PacketMapping.serverIdPacketMap.containsKey(packet.getId())) {
             ServerPacket cp = PacketMapping.serverIdPacketMap.get(packet.getId()).newInstance();
             cp.read(packet.getPayload());
-            cp.handle(ctx);
+
+            if(localClientInstance != null)
+                cp.handle(ctx, localClientInstance);
+            else
+                logger.warn("LocalGameInstance is null!");
         }
         else {
             logger.warn("Unknown packetid - "+packet.getId());
@@ -34,11 +40,10 @@ public class GameClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        logger.info("Conectado");
-        //byte[] array = {0x00};
-        //ctx.write(new GameMessage(0x00, Unpooled.copiedBuffer(array)));
-        //ctx.writeAndFlush(new ConnectPacket("bot").write());
-        LocalWorld.getInstance().init(ctx, "bot");
+        logger.info("Conected to server, starting local game instance");
+
+        localClientInstance = new LocalClientInstance();
+        localClientInstance.init(ctx, clientName);
 
     }
 

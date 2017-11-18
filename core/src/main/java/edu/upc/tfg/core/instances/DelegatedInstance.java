@@ -2,6 +2,7 @@ package edu.upc.tfg.core.instances;
 
 import edu.upc.tfg.core.ClientConnection;
 import edu.upc.tfg.core.GameMessage;
+import edu.upc.tfg.core.packets.ServerPacket;
 import edu.upc.tfg.core.utils.Position;
 
 public class DelegatedInstance extends MasterGameInstance {
@@ -12,7 +13,7 @@ public class DelegatedInstance extends MasterGameInstance {
     }
 
     @Override
-    public void sendToAllPlayers(GameMessage msg, int senderEID) {
+    public void sendToAllPlayers(ServerPacket packet, int senderEID) {
 
     }
 

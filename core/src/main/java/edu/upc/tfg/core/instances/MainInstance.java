@@ -4,6 +4,7 @@ import edu.upc.tfg.core.ClientConnection;
 import edu.upc.tfg.core.GameMessage;
 import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.entities.Player;
+import edu.upc.tfg.core.packets.ServerPacket;
 import edu.upc.tfg.core.packets.server.NewEntityPacket;
 import edu.upc.tfg.core.packets.server.SpawnPositionPacket;
 import edu.upc.tfg.core.utils.Position;
@@ -54,10 +55,10 @@ public class MainInstance extends MasterGameInstance {
         newPlayer.getCon().sendGameMessage(new SpawnPositionPacket(lastEID + 1, spawnPosition).write());
 
         playerList.add(newPlayer);
-
+        con.setPlayer(newPlayer);
 
         // informar de la existencia de la nueva entidad al resto de clientes
-        sendToAllPlayers(new NewEntityPacket(lastEID + 1, newPlayer.getName(), spawnPosition).write(), newPlayer.getEntityId());
+        sendToAllPlayers(new NewEntityPacket(lastEID + 1, newPlayer.getName(), spawnPosition), newPlayer.getEntityId());
 
         lastEID++;
     }
@@ -73,10 +74,10 @@ public class MainInstance extends MasterGameInstance {
     }
 
     @Override
-    public void sendToAllPlayers(GameMessage msg, int senderEID) {
+    public void sendToAllPlayers(ServerPacket packet, int senderEID) {
         for(Player player : playerList) {
             if(player.getEntityId() != senderEID) {
-                player.getCon().sendGameMessage(msg);
+                player.getCon().sendGameMessage(packet.write());
             }
         }
     }

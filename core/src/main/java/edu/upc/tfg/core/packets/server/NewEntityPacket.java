@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public class NewEntityPacket extends ServerPacket {
     private static final Logger logger = Logger.getLogger(NewEntityPacket.class.getName());
@@ -32,7 +33,7 @@ public class NewEntityPacket extends ServerPacket {
     public void read(ByteBuf payload) throws Exception {
         entityId = payload.readInt();
         nameLenght = payload.readInt();
-        name = new String(payload.readSlice(nameLenght).array(), "UTF-8");
+        name = payload.readSlice(nameLenght).toString(Charset.forName("UTF-8"));
         initialPosX = payload.readInt();
         initialPosY = payload.readInt();
     }

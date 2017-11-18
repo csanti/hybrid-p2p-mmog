@@ -33,7 +33,7 @@ public class SimpleBot {
                     ChannelPipeline pipeline = socketChannel.pipeline();
 
                     //pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.nulDelimiter()));
-                    pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(30));
+                    //pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(30));
                     pipeline.addLast("decoder", new GamePacketDecoder());
                     pipeline.addLast("encoder", new GamePacketEncoder());
 
@@ -48,6 +48,7 @@ public class SimpleBot {
             group.shutdownGracefully();
         }
     }
+
 
 
 

@@ -6,6 +6,7 @@ import edu.upc.tfg.core.instances.MasterGameInstance;
 import edu.upc.tfg.core.packets.ClientPacket;
 import edu.upc.tfg.core.utils.Position;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.apache.log4j.Logger;
 
 public class CPlayerPosUpdatePacket extends ClientPacket {
@@ -18,6 +19,9 @@ public class CPlayerPosUpdatePacket extends ClientPacket {
         this.posX = newPos.getPositionX();
         this.posY = newPos.getPositionY();
     }
+    public CPlayerPosUpdatePacket() {
+
+    }
 
     @Override
     public void read(ByteBuf payload) throws Exception {
@@ -27,6 +31,7 @@ public class CPlayerPosUpdatePacket extends ClientPacket {
 
     @Override
     public GameMessage write() {
+        payload = Unpooled.buffer();
         payload.writeInt(posX);
         payload.writeInt(posY);
         return buildGameMessage(this.getClass());

@@ -6,7 +6,7 @@ public class Position {
     private int positionY;
 
     public Position(int positionX, int positionY) {
-        this.positionX = positionY;
+        this.positionX = positionX;
         this.positionY = positionY;
     }
     public Position () {

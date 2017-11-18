@@ -11,6 +11,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,12 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 
     public static List<ClientConnection> connections = new ArrayList<ClientConnection>();
     public ClientConnection conn;
-    private MasterGameInstance gameInstance;
+    private static MasterGameInstance gameInstance;
 
     public GameServerHandler(){
-        gameInstance = new MainInstance();
+        if(gameInstance == null) {
+            gameInstance = new MainInstance();
+        }
     }
 
     @Override
@@ -44,7 +47,18 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.error("Handler exception: ", cause);
+
+        if(cause instanceof IOException) {
+            if(conn.getPlayer() != null) {
+                logger.error("Client "+conn.getPlayer().getName()+" IOException, unexpeced disconnect");
+            }
+            else {
+                logger.error("IOException, unexpected disconnect");
+            }
+
+        } else {
+            logger.error("Handler exception: ", cause);
+        }
     }
 
     @Override

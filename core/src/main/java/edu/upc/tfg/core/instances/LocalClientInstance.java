@@ -3,6 +3,8 @@ package edu.upc.tfg.core.instances;
 import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.packets.client.CPlayerPosUpdatePacket;
 import edu.upc.tfg.core.packets.client.ConnectPacket;
+import edu.upc.tfg.core.packets.client.ServerCreationResultPacket;
+import edu.upc.tfg.core.server.GameServer;
 import edu.upc.tfg.core.utils.Position;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
@@ -80,5 +82,23 @@ public class LocalClientInstance {
                 }
             }
         },2000 ,2000, TimeUnit.MILLISECONDS);
+    }
+
+    public void initNewDelegatedInstance(int instanceId, int port, int maxConnections, int duration) {
+
+        // parar game loop
+        try {
+            serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, port).write());
+            new GameServer(instanceId).run(port); // bloquea
+
+        } catch (Exception ex) {
+            logger.error("Error while initiating p2p server", ex);
+            serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 1).write());
+        }
+
+    }
+
+    public void stablishConnectionWithNewP2PServer(String ip, int port) {
+        
     }
 }

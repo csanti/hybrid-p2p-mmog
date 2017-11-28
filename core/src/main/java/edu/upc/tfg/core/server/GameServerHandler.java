@@ -1,6 +1,7 @@
-package edu.upc.tfg.server;
+package edu.upc.tfg.core.server;
 
 import edu.upc.tfg.core.ClientConnection;
+import edu.upc.tfg.core.instances.DelegatedInstance;
 import edu.upc.tfg.core.instances.MainInstance;
 import edu.upc.tfg.core.instances.MasterGameInstance;
 import edu.upc.tfg.core.packets.ClientPacket;
@@ -22,9 +23,16 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
     public ClientConnection conn;
     private static MasterGameInstance gameInstance;
 
-    public GameServerHandler(){
+    public GameServerHandler(int instanceId){
+        // type 1 = mainInstance
+        // type 2 = delgatedInstance
         if(gameInstance == null) {
-            gameInstance = new MainInstance();
+            if(instanceId == 0) {
+                gameInstance = new MainInstance();
+            }
+            else {
+                gameInstance = new DelegatedInstance(instanceId);
+            }
         }
     }
 

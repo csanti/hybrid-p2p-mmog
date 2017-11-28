@@ -1,3 +1,5 @@
+package edu.upc.tfg.core.client;
+
 import edu.upc.tfg.core.GameMessage;
 import edu.upc.tfg.core.instances.LocalClientInstance;
 import edu.upc.tfg.core.packets.PacketMapping;

@@ -1,3 +1,5 @@
+import edu.upc.tfg.core.client.GameClientHandler;
+import edu.upc.tfg.core.client.SimpleBot;
 import edu.upc.tfg.core.packets.PacketMapping;
 import org.apache.log4j.Logger;
 

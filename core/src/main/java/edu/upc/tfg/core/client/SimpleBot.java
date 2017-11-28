@@ -1,3 +1,5 @@
+package edu.upc.tfg.core.client;
+
 import edu.upc.tfg.core.GamePacketDecoder;
 import edu.upc.tfg.core.GamePacketEncoder;
 import io.netty.bootstrap.Bootstrap;
@@ -5,7 +7,6 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.log4j.Logger;
 
 public class SimpleBot {

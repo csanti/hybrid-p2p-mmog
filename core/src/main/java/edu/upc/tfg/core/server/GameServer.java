@@ -2,6 +2,7 @@ package edu.upc.tfg.core.server;
 
 import edu.upc.tfg.core.GamePacketDecoder;
 import edu.upc.tfg.core.GamePacketEncoder;
+import edu.upc.tfg.core.instances.MasterGameInstance;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -13,10 +14,10 @@ import org.apache.log4j.Logger;
 public class GameServer {
     private static final Logger logger = Logger.getLogger(GameServer.class.getName());
 
-    private int instanceId;
+    private MasterGameInstance instance;
 
-    public GameServer(int instanceId) {
-        this.instanceId = instanceId;
+    public GameServer(MasterGameInstance instance) {
+        this.instance= instance;
     }
 
     public void run(int port) throws Exception {
@@ -34,7 +35,7 @@ public class GameServer {
                     pipeline.addLast("decoder", new GamePacketDecoder());
                     pipeline.addLast("encoder", new GamePacketEncoder());
 
-                    pipeline.addLast(new GameServerHandler(instanceId));
+                    pipeline.addLast(new GameServerHandler(instance));
                 }
             });
 

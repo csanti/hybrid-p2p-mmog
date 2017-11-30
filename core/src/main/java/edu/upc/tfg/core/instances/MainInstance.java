@@ -148,7 +148,7 @@ public class MainInstance extends MasterGameInstance {
                 // notificar aborto
                 for(Player player : instance.getPlayerList()) {
                     if(player.getEntityId() != instance.getServerEntityId()) {
-                        player.getCon().sendGameMessage(new ChangeServerPacket(1, instance.getServerIp(), instance.getServerPort()).write());
+                        player.getCon().sendGameMessage(new ChangeServerPacket(1, instance.getServerIp(), instance.getServerPort(), instanceId).write());
                     }
                 }
 
@@ -176,7 +176,7 @@ public class MainInstance extends MasterGameInstance {
 
         for(Player player : instance.getPlayerList()) {
             if(player.getEntityId() != instance.getServerEntityId()) {
-                player.getCon().sendGameMessage(new ChangeServerPacket(0, instance.getServerIp(), instance.getServerPort()).write());
+                player.getCon().sendGameMessage(new ChangeServerPacket(0, instance.getServerIp(), instance.getServerPort(), instanceId).write());
             }
         }
     }

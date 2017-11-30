@@ -1,8 +1,12 @@
 package edu.upc.tfg.server;
 
+import edu.upc.tfg.core.instances.MainInstance;
 import edu.upc.tfg.core.packets.PacketMapping;
 import edu.upc.tfg.core.server.GameServer;
 import org.apache.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Server {
     private static final Logger logger = Logger.getLogger(Server.class.getName());
@@ -12,9 +16,20 @@ public class Server {
         PacketMapping.mapClientPackets();
         PacketMapping.mapServerPackets();
 
-        new GameServer(0).run(8182);
+        MainInstance mainInstance = new MainInstance();
 
-        System.in.read();
+        new GameServer(mainInstance).run(8182);
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        boolean looping = true;
+        while(looping) {
+            String s = br.readLine();
+            if(s.equals("hi")) {
+                System.out.println("bye");
+            }
+        }
+
     }
 
 }

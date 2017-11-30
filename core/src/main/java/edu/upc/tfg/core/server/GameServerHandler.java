@@ -21,19 +21,11 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 
     public static List<ClientConnection> connections = new ArrayList<ClientConnection>();
     public ClientConnection conn;
-    private static MasterGameInstance gameInstance;
+    private MasterGameInstance gameInstance;
 
-    public GameServerHandler(int instanceId){
-        // type 1 = mainInstance
-        // type 2 = delgatedInstance
-        if(gameInstance == null) {
-            if(instanceId == 0) {
-                gameInstance = new MainInstance();
-            }
-            else {
-                gameInstance = new DelegatedInstance(instanceId);
-            }
-        }
+    public GameServerHandler(MasterGameInstance instance){
+
+        this.gameInstance = instance;
     }
 
     @Override

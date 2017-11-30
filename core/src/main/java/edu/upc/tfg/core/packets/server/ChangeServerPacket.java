@@ -18,15 +18,17 @@ public class ChangeServerPacket extends ServerPacket {
     private int op;
     private String serverIp;
     private int serverPort;
+    private int instanceId;
 
     public ChangeServerPacket() {
 
     }
 
-    public ChangeServerPacket(int op, String serverIp, int serverPort) {
+    public ChangeServerPacket(int op, String serverIp, int serverPort, int instanceId) {
         this.op = op;
         this.serverIp = serverIp;
         this.serverPort = serverPort;
+        this.instanceId = instanceId;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class ChangeServerPacket extends ServerPacket {
         int ipStringLength = payload.readInt();
         serverIp = payload.readSlice(ipStringLength).toString(Charset.forName("UTF-8"));
         serverPort = payload.readInt();
+        instanceId = payload.readInt();
     }
 
     @Override
@@ -51,15 +54,16 @@ public class ChangeServerPacket extends ServerPacket {
         payload.writeInt(ipBuf.readableBytes());
         payload.writeBytes(ipBuf);
         payload.writeInt(serverPort);
+        payload.writeInt(instanceId);
         logger.info("[SEND] ChangeServerPacket");
         return buildGameMessage(this.getClass());
     }
 
     @Override
     public void handle(ChannelHandlerContext ctx, LocalClientInstance inst) {
-        logger.info("[RECV] ChangeServerPacket to - op:"+op+" ip: "+serverIp+" port: "+serverPort);
+        logger.info("[RECV] ChangeServerPacket to - op:"+op+" ip: "+serverIp+" port: "+serverPort+" instanceId: "+instanceId);
         if(op == 0) {
-            inst.stablishConnectionWithNewP2PServer(serverIp, serverPort);
+            inst.stablishConnectionWithNewP2PServer(serverIp, serverPort, instanceId);
         }
 
     }

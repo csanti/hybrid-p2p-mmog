@@ -2,6 +2,7 @@ package edu.upc.tfg.core.packets;
 
 import edu.upc.tfg.core.packets.client.CPlayerPosUpdatePacket;
 import edu.upc.tfg.core.packets.client.ConnectPacket;
+import edu.upc.tfg.core.packets.client.KeepAlivePacket;
 import edu.upc.tfg.core.packets.client.ServerCreationResultPacket;
 import edu.upc.tfg.core.packets.server.*;
 
@@ -23,6 +24,8 @@ public class PacketMapping {
         clientPacketIdMap.put(CPlayerPosUpdatePacket.class, 0x06);
         clientIdPacketMap.put(0x0A, ServerCreationResultPacket.class);
         clientPacketIdMap.put(ServerCreationResultPacket.class, 0x0A);
+        clientIdPacketMap.put(0x0B, KeepAlivePacket.class);
+        clientPacketIdMap.put(KeepAlivePacket.class, 0x0B);
     }
 
     public static void mapServerPackets() {

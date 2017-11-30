@@ -4,6 +4,7 @@ import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.packets.client.CPlayerPosUpdatePacket;
 import edu.upc.tfg.core.packets.client.ConnectPacket;
+import edu.upc.tfg.core.packets.client.KeepAlivePacket;
 import edu.upc.tfg.core.packets.client.ServerCreationResultPacket;
 import edu.upc.tfg.core.server.GameServer;
 import edu.upc.tfg.core.utils.Position;
@@ -26,6 +27,8 @@ public class LocalClientInstance {
     private Position startPosition;
 
     private boolean isLiveInstance;
+    private boolean servingInstance = false;
+    private int currentInstanceId = 0;
 
 
     public void init(ChannelHandlerContext serverCtx, String instanceOwnerName) {
@@ -91,6 +94,21 @@ public class LocalClientInstance {
 
             }
         },2000 ,2000, TimeUnit.MILLISECONDS);
+
+        serverCtx.channel().eventLoop().scheduleAtFixedRate(new Runnable() {
+            public void run() {
+
+                if(servingInstance) {
+                    // send keep alive with serving satatus and witch instance id is serving
+                    serverCtx.writeAndFlush(new KeepAlivePacket("SERVING", currentInstanceId).write());
+                }
+                else {
+                    // send keep alive with connected status and to which instance id
+                    serverCtx.writeAndFlush(new KeepAlivePacket("CONNECTED", currentInstanceId).write());
+                }
+
+            }
+        },2000 ,5000, TimeUnit.MILLISECONDS);
     }
 
     public void initNewDelegatedInstance(int instanceId, int port, int maxConnections, int duration) {
@@ -100,6 +118,8 @@ public class LocalClientInstance {
             serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, port).write());
             new GameServer(instanceId).run(port); // bloquea
             isLiveInstance = false;
+            servingInstance = true;
+            currentInstanceId = instanceId;
 
         } catch (Exception ex) {
             logger.error("Error while initiating p2p server", ex);
@@ -108,8 +128,9 @@ public class LocalClientInstance {
 
     }
 
-    public void stablishConnectionWithNewP2PServer(String ip, int port) {
+    public void stablishConnectionWithNewP2PServer(String ip, int port, int instanceId) {
         new GameClient("localhost", port, "p2pclient"+instanceOwnerName).run(); //TODO cambiar ip
         isLiveInstance = false;
+        currentInstanceId = instanceId;
     }
 }

@@ -16,5 +16,4 @@ public abstract class MasterGameInstance {
     public abstract void removeEntity(int entityId);
 
     public abstract void sendToAllPlayers(ServerPacket packet, int senderEID);
-
 }

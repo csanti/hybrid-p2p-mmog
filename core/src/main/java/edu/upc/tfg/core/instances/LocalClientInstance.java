@@ -116,7 +116,7 @@ public class LocalClientInstance {
         // parar game loop
         try {
             serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, port).write());
-            new GameServer(instanceId).run(port); // bloquea
+            new GameServer(new DelegatedInstance(instanceId)).run(port);
             isLiveInstance = false;
             servingInstance = true;
             currentInstanceId = instanceId;

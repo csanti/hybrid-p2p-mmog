@@ -9,7 +9,7 @@ public class ClientGenerator {
 
     public static void main(final String[] args) {
         logger.info("Entry point");
-        int numClients = 2;
+        int numClients = 50;
 
         if (args.length == 0) {
             logger.info("No has introducido argumentos");
@@ -25,7 +25,7 @@ public class ClientGenerator {
             for(int i = 0; i < numClients; i++) {
                 logger.info("Iniciando cliente nº"+i);
                 new GameClient("localhost", 8182, "bot"+i).run();
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             }
         } catch(Exception ex) {
             logger.error("Error ", ex);

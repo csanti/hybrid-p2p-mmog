@@ -46,12 +46,13 @@ public class KeepAlivePacket extends ClientPacket {
         payload.writeInt(statusBuf.readableBytes());
         payload.writeBytes(statusBuf);
         payload.writeInt(instanceId);
-        logger.info("[SEND] KeepAlive - Status: "+status+" instanceId: "+instanceId);
+        //logger.info("[SEND] KeepAlive - Status: "+status+" instanceId: "+instanceId);
         return buildGameMessage(this.getClass());
     }
 
     @Override
     public void handle(ClientConnection conn, MasterGameInstance inst) {
-        logger.info("[RECV] KeepAlive - Status: "+status+" instanceId: "+instanceId);
+        //logger.info("[RECV] KeepAlive - Status: "+status+" instanceId: "+instanceId);
+        conn.getPlayer().updateStatusAndInstanceId(status, instanceId);
     }
 }

@@ -72,10 +72,6 @@ public class MainInstance extends MasterGameInstance {
 
         lastEID++;
 
-        //DEBUG
-        if(playingPlayerList.size() >= 2) {
-            delegateInstance();
-        }
     }
 
     @Override
@@ -105,8 +101,12 @@ public class MainInstance extends MasterGameInstance {
         }
     }
 
-    public void delegateInstance() {
+    public void delegateInstance(int numDelegatedPlayers) {
         // guardar lo que se esta delgando
+        if(numDelegatedPlayers < 2 || numDelegatedPlayers > playingPlayerList.size()) {
+            logger.warn("Can't delegate the number of players specified");
+            return;
+        }
         DelegatedInstanceInfo newInstanceInfo;
         int serverEid;
         Player serverPlayer;
@@ -120,12 +120,16 @@ public class MainInstance extends MasterGameInstance {
             return;
         }
 
-        if(playingPlayerList.get(1) != null) {
-            delegatedPlayers.add(playingPlayerList.get(1));
-        } else {
-            logger.warn("Not enough players in playingPlayerList to delegate to the p2p area");
-            return;
+        for(int i = 1; i < numDelegatedPlayers; i++) {
+            if(playingPlayerList.get(i) != null) {
+                delegatedPlayers.add(playingPlayerList.get(i));
+            } else {
+                logger.warn("Not enough players in playingPlayerList to delegate to the p2p area");
+                return;
+            }
         }
+
+
 
         newInstanceInfo = new DelegatedInstanceInfo(instanceCounter+1, delegatedPlayers, serverEid);
         // TODO la ip del servidor hay que cojerla de otra forma
@@ -134,7 +138,7 @@ public class MainInstance extends MasterGameInstance {
 
 
         // enviar notificacion al servidor
-        sendToPlayer(new NewP2PServerPacket(instanceCounter+1, 3000, 10, 10), serverEid);
+        sendToPlayer(new NewP2PServerPacket(instanceCounter+1, 3000+instanceCounter, 10, 10), serverEid);
         instanceCounter++;
         // se esperara a la respuesta del nuevo servidor para avisar al resto de clientes
     }
@@ -175,9 +179,22 @@ public class MainInstance extends MasterGameInstance {
         instance.setServerPort(serverPort);
 
         for(Player player : instance.getPlayerList()) {
+            playingPlayerList.remove(player);
             if(player.getEntityId() != instance.getServerEntityId()) {
                 player.getCon().sendGameMessage(new ChangeServerPacket(0, instance.getServerIp(), instance.getServerPort(), instanceId).write());
             }
         }
+    }
+
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public List<Player> getPlayingPlayerList() {
+        return playingPlayerList;
+    }
+
+    public List<DelegatedInstanceInfo> getDelegatedInstances() {
+        return delegatedInstances;
     }
 }

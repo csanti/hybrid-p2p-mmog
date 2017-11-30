@@ -39,7 +39,7 @@ public class CPlayerPosUpdatePacket extends ClientPacket {
 
     @Override
     public void handle(ClientConnection conn, MasterGameInstance inst) {
-        logger.info("[RECVD] Player pos update - Username: "+ conn.getPlayer().getName()+" - EntityID: "+conn.getPlayer().getEntityId());
+        //logger.info("[RECVD] Player pos update - Username: "+ conn.getPlayer().getName()+" - EntityID: "+conn.getPlayer().getEntityId());
         //logger.info("        x: "+posX+" y: "+posY);
     }
 }

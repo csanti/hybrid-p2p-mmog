@@ -9,8 +9,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.log4j.Logger;
 
-public class SimpleBot {
-    private static final Logger logger = Logger.getLogger(SimpleBot.class.getName());
+public class GameClient {
+    private static final Logger logger = Logger.getLogger(GameClient.class.getName());
 
     private Channel channel = null;
 
@@ -18,7 +18,7 @@ public class SimpleBot {
     private final int port;
     private final String clientName;
 
-    public SimpleBot(String host, int port, String clientName) {
+    public GameClient(String host, int port, String clientName) {
         this.host = host;
         this.port = port;
         this.clientName = clientName;

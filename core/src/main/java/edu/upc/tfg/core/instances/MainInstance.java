@@ -99,7 +99,7 @@ public class MainInstance extends MasterGameInstance {
 
     public void sendToPlayer(ServerPacket packet, int receiverEID) {
         for(Player player : playingPlayerList) {
-            if(player.getEntityId() != receiverEID) {
+            if(player.getEntityId() == receiverEID) {
                 player.getCon().sendGameMessage(packet.write());
             }
         }

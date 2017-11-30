@@ -39,7 +39,7 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         GameMessage packet = (GameMessage) msg;
-        logger.info("Message received: "+packet.getId()+" Size: "+ packet.getPayload().capacity()+" - "+DatatypeConverter.printHexBinary(packet.getPayload().array()));
+        //logger.info("Message received: "+packet.getId()+" Size: "+ packet.getPayload().capacity()+" - "+DatatypeConverter.printHexBinary(packet.getPayload().array()));
 
         if(PacketMapping.clientIdPacketMap.containsKey(packet.getId())) {
             ClientPacket cp = PacketMapping.clientIdPacketMap.get(packet.getId()).newInstance();

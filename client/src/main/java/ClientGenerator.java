@@ -1,9 +1,9 @@
 import edu.upc.tfg.core.client.GameClientHandler;
-import edu.upc.tfg.core.client.SimpleBot;
+import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.packets.PacketMapping;
 import org.apache.log4j.Logger;
 
-public class GameClient {
+public class ClientGenerator {
     private static final Logger logger = Logger.getLogger(GameClientHandler.class.getName());
 
 
@@ -24,7 +24,7 @@ public class GameClient {
         try {
             for(int i = 0; i < numClients; i++) {
                 logger.info("Iniciando cliente nº"+i);
-                new SimpleBot("localhost", 8182, "bot"+i).run();
+                new GameClient("localhost", 8182, "bot"+i).run();
                 Thread.sleep(10000);
             }
         } catch(Exception ex) {

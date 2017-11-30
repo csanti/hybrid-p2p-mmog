@@ -58,6 +58,9 @@ public class ChangeServerPacket extends ServerPacket {
     @Override
     public void handle(ChannelHandlerContext ctx, LocalClientInstance inst) {
         logger.info("[RECV] ChangeServerPacket to - op:"+op+" ip: "+serverIp+" port: "+serverPort);
+        if(op == 0) {
+            inst.stablishConnectionWithNewP2PServer(serverIp, serverPort);
+        }
 
     }
 }

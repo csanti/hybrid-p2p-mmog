@@ -1,5 +1,6 @@
 package edu.upc.tfg.core.instances;
 
+import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.packets.client.CPlayerPosUpdatePacket;
 import edu.upc.tfg.core.packets.client.ConnectPacket;
@@ -24,6 +25,9 @@ public class LocalClientInstance {
     private GameEntity localPlayer;
     private Position startPosition;
 
+    private boolean isLiveInstance;
+
+
     public void init(ChannelHandlerContext serverCtx, String instanceOwnerName) {
         // send connect message
         this.serverCtx = serverCtx;
@@ -37,6 +41,7 @@ public class LocalClientInstance {
         logger.info("[LocalWorld "+instanceOwnerName+"] spawin local player - entityId: "+entityId+" x: "+pos.getPositionX()+" y: "+pos.getPositionY());
         logger.info("[LocalWorld "+instanceOwnerName+"] Starting game loop...");
         // fake game loop que simula envio constante de paquetes
+        isLiveInstance = true;
         initGameLoop();
     }
 
@@ -70,16 +75,20 @@ public class LocalClientInstance {
         serverCtx.channel().eventLoop().scheduleAtFixedRate(new Runnable() {
             public void run() {
                 // simple update of player position
-                if(localPlayer.getPosition().getPositionX() < startPosition.getPositionX() + 1000) {
-                    localPlayer.getPosition().setPositionX(localPlayer.getPosition().getPositionX() + 1);
-                } else {
-                    localPlayer.getPosition().setPositionX(startPosition.getPositionX());
+                if(isLiveInstance) {
+                    // update player position and send
+                    if(localPlayer.getPosition().getPositionX() < startPosition.getPositionX() + 1000) {
+                        localPlayer.getPosition().setPositionX(localPlayer.getPosition().getPositionX() + 1);
+                    } else {
+                        localPlayer.getPosition().setPositionX(startPosition.getPositionX());
+                    }
+                    try {
+                        serverCtx.writeAndFlush(new CPlayerPosUpdatePacket(localPlayer.getPosition()).write());
+                    } catch (Exception ex) {
+                        logger.error("[LocalWorld "+instanceOwnerName+"] GameLoop error: ", ex);
+                    }
                 }
-                try {
-                    serverCtx.writeAndFlush(new CPlayerPosUpdatePacket(localPlayer.getPosition()).write());
-                } catch (Exception ex) {
-                    logger.error("[LocalWorld "+instanceOwnerName+"] GameLoop error: ", ex);
-                }
+
             }
         },2000 ,2000, TimeUnit.MILLISECONDS);
     }
@@ -90,6 +99,7 @@ public class LocalClientInstance {
         try {
             serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, port).write());
             new GameServer(instanceId).run(port); // bloquea
+            isLiveInstance = false;
 
         } catch (Exception ex) {
             logger.error("Error while initiating p2p server", ex);
@@ -99,6 +109,7 @@ public class LocalClientInstance {
     }
 
     public void stablishConnectionWithNewP2PServer(String ip, int port) {
-        
+        new GameClient("localhost", port, "p2pclient"+instanceOwnerName).run(); //TODO cambiar ip
+        isLiveInstance = false;
     }
 }

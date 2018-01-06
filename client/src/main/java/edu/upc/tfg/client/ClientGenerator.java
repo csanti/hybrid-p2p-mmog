@@ -1,3 +1,5 @@
+package edu.upc.tfg.client;
+
 import edu.upc.tfg.core.client.GameClientHandler;
 import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.packets.PacketMapping;
@@ -9,7 +11,7 @@ public class ClientGenerator {
 
     public static void main(final String[] args) {
         logger.info("Entry point");
-        int numClients = 50;
+        int numClients = 2;
 
         if (args.length == 0) {
             logger.info("No has introducido argumentos");

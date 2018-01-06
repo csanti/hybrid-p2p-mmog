@@ -33,4 +33,6 @@ public class GameEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setPosition(Position newPos) { this.position = newPos; }
 }

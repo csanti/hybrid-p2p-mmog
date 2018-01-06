@@ -40,5 +40,7 @@ public class PacketMapping {
         serverPacketIdMap.put(NewP2PServerPacket.class, 0x07);
         serverIdPacketMap.put(0x08, ChangeServerPacket.class);
         serverPacketIdMap.put(ChangeServerPacket.class, 0x08);
+        serverIdPacketMap.put(0x0C, EntityPosUpdatePacket.class);
+        serverPacketIdMap.put(EntityPosUpdatePacket.class, 0x0C);
     }
 }

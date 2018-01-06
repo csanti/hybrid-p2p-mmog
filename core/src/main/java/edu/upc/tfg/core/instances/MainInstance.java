@@ -6,10 +6,8 @@ import edu.upc.tfg.core.entities.DelegatedInstanceInfo;
 import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.entities.Player;
 import edu.upc.tfg.core.packets.ServerPacket;
-import edu.upc.tfg.core.packets.server.ChangeServerPacket;
-import edu.upc.tfg.core.packets.server.NewEntityPacket;
-import edu.upc.tfg.core.packets.server.NewP2PServerPacket;
-import edu.upc.tfg.core.packets.server.SpawnPositionPacket;
+import edu.upc.tfg.core.packets.client.CPlayerPosUpdatePacket;
+import edu.upc.tfg.core.packets.server.*;
 import edu.upc.tfg.core.utils.Position;
 import org.apache.log4j.Logger;
 import sun.rmi.runtime.Log;
@@ -76,7 +74,14 @@ public class MainInstance extends MasterGameInstance {
 
     @Override
     public void updateEntityPosition(int entityId, Position position) {
-
+        for(Player player : playingPlayerList) {
+            if(player.getEntityId() == entityId) {
+                player.setPosition(position);
+                player.getCon().sendGameMessage(new SPlayerPosUpdatePacket(position).write());
+                break;
+            }
+        }
+        sendToAllPlayers(new EntityPosUpdatePacket(entityId, position), entityId);
     }
 
     @Override

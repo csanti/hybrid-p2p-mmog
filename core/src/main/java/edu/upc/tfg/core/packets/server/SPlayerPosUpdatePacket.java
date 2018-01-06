@@ -5,6 +5,7 @@ import edu.upc.tfg.core.instances.LocalClientInstance;
 import edu.upc.tfg.core.packets.ServerPacket;
 import edu.upc.tfg.core.utils.Position;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 
@@ -14,6 +15,9 @@ public class SPlayerPosUpdatePacket extends ServerPacket {
     private int posX;
     private int posY;
 
+    public SPlayerPosUpdatePacket() {
+
+    }
     public SPlayerPosUpdatePacket(Position newPos) {
         this.posX = newPos.getPositionX();
         this.posY = newPos.getPositionY();
@@ -27,6 +31,7 @@ public class SPlayerPosUpdatePacket extends ServerPacket {
 
     @Override
     public GameMessage write() {
+        payload = Unpooled.buffer();
         payload.writeInt(posX);
         payload.writeInt(posY);
         return buildGameMessage(this.getClass());
@@ -35,5 +40,6 @@ public class SPlayerPosUpdatePacket extends ServerPacket {
     @Override
     public void handle(ChannelHandlerContext ctx, LocalClientInstance inst) {
         //logger.info("ClientPosUpdate x: "+posX+" y: "+posY);
+        // no se hace nada porque asumimos que no hace falta confirmacion del servidor para moverse
     }
 }

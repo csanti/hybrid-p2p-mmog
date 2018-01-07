@@ -93,7 +93,7 @@ public class LocalClientInstance {
                 }
 
             }
-        },2000 ,2000, TimeUnit.MILLISECONDS);
+        },2000 ,140, TimeUnit.MILLISECONDS);
 
         serverCtx.channel().eventLoop().scheduleAtFixedRate(new Runnable() {
             public void run() {

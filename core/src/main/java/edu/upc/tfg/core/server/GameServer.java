@@ -8,6 +8,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.log4j.Logger;
 
@@ -32,7 +34,9 @@ public class GameServer {
                     ChannelPipeline pipeline = socketChannel.pipeline();
 
                     pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(30));
+                    pipeline.addLast(new LengthFieldBasedFrameDecoder(0x100000, 0, 4, 0, 4));
                     pipeline.addLast("decoder", new GamePacketDecoder());
+                    pipeline.addLast(new LengthFieldPrepender(4));
                     pipeline.addLast("encoder", new GamePacketEncoder());
 
                     pipeline.addLast(new GameServerHandler(instance));
@@ -42,7 +46,7 @@ public class GameServer {
             b.bind("localhost", port).addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if(channelFuture.isSuccess()) {
-                        logger.info("Server listening on "+channelFuture.channel().localAddress());
+                        logger.info("Server listening: "+channelFuture.channel().localAddress());
                     } else {
                         logger.error("Could not bind to host");
                     }

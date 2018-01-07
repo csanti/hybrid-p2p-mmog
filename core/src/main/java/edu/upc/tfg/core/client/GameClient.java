@@ -7,6 +7,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import org.apache.log4j.Logger;
 
 public class GameClient {
@@ -35,7 +37,9 @@ public class GameClient {
 
                     //pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.nulDelimiter()));
                     //pipeline.addLast("readTimeoutHandler", new ReadTimeoutHandler(30));
+                    pipeline.addLast(new LengthFieldBasedFrameDecoder(0x100000, 0, 4, 0, 4));
                     pipeline.addLast("decoder", new GamePacketDecoder());
+                    pipeline.addLast(new LengthFieldPrepender(4));
                     pipeline.addLast("encoder", new GamePacketEncoder());
 
                     pipeline.addLast(new GameClientHandler(clientName));

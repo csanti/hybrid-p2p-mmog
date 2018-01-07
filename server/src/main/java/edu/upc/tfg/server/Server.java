@@ -15,10 +15,10 @@ public class Server {
     private static final Logger logger = Logger.getLogger(Server.class.getName());
 
     public static void main(final String[] args) throws Exception {
-        logger.info("Entry point");
+        logger.info("Entry point...");
         PacketMapping.mapClientPackets();
         PacketMapping.mapServerPackets();
-
+        //main instance
         MainInstance mainInstance = new MainInstance();
 
         new GameServer(mainInstance).run(8182);

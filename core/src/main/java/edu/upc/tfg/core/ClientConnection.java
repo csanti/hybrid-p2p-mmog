@@ -37,4 +37,20 @@ public class ClientConnection {
         }
         this.ctx.writeAndFlush(msg);
     }
+
+    public void queueGameMessage(GameMessage msg) {
+        if(this.ctx == null) {
+            logger.warn("Ctx no inicializado");
+            return;
+        }
+        this.ctx.write(msg);
+    }
+
+    public void flush() {
+        if(this.ctx == null) {
+            logger.warn("Ctx no inicializado");
+            return;
+        }
+        this.ctx.flush();
+    }
 }

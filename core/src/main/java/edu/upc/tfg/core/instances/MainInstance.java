@@ -28,6 +28,8 @@ public class MainInstance extends MasterGameInstance {
     private int worldSizeX;
     private int worldSizeY;
 
+    long lastUpdateMilis = 0;
+
     public MainInstance() {
         lastSpawnPosition = new Position(0,0);
         spawnOffset = 50;
@@ -74,6 +76,7 @@ public class MainInstance extends MasterGameInstance {
 
     @Override
     public void updateEntityPosition(int entityId, Position position) {
+        long currentMillis = System.currentTimeMillis();
         for(Player player : playingPlayerList) {
             if(player.getEntityId() == entityId) {
                 player.setPosition(position);
@@ -81,7 +84,14 @@ public class MainInstance extends MasterGameInstance {
                 break;
             }
         }
-        sendToAllPlayers(new EntityPosUpdatePacket(entityId, position), entityId);
+
+        if ((currentMillis - lastUpdateMilis) > 50) {
+            for(Player player : playingPlayerList) {
+                // generar world state packet
+            }
+            sendToAllPlayers(new EntityPosUpdatePacket(entityId, position), entityId);
+            lastUpdateMilis = currentMillis;
+        }
     }
 
     @Override

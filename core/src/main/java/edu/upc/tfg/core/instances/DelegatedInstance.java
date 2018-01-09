@@ -2,6 +2,7 @@ package edu.upc.tfg.core.instances;
 
 import edu.upc.tfg.core.ClientConnection;
 import edu.upc.tfg.core.GameMessage;
+import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.entities.Player;
 import edu.upc.tfg.core.packets.ServerPacket;
 import edu.upc.tfg.core.packets.server.NewEntityPacket;

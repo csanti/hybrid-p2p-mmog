@@ -71,6 +71,7 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         connections.remove(this.conn);
+        gameInstance.removeEntity(this.conn.getPlayer().getEntityId());
         logger.info("Client disconnected "+ctx.channel().remoteAddress()+" Total clients connected: "+connections.size());
     }
 }

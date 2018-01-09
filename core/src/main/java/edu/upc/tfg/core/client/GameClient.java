@@ -46,12 +46,16 @@ public class GameClient {
                 }
             });
 
-            Channel channel = bootstrap.connect(this.host, this.port).sync().channel();
+            channel = bootstrap.connect(this.host, this.port).sync().channel();
         }
         catch (Exception e) {
             logger.error("Client error: ", e);
             group.shutdownGracefully();
         }
+    }
+
+    public void stop() {
+        channel.close();
     }
 
 

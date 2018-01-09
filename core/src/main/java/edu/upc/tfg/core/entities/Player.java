@@ -8,10 +8,12 @@ public class Player extends GameEntity{
     private ClientConnection con;
     private String status;
     private int instanceId;
+    private String name;
 
     public Player(String username, int entityId, Position pos, ClientConnection con) {
-        super(username,entityId,pos);
+        super(entityId,pos);
         this.con = con;
+        this.name = username;
     }
 
     public ClientConnection getCon() {
@@ -33,5 +35,9 @@ public class Player extends GameEntity{
 
     public int getInstanceId() {
         return instanceId;
+    }
+
+    public String getName() {
+        return name;
     }
 }

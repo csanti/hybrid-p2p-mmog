@@ -2,6 +2,7 @@ package edu.upc.tfg.core.instances;
 
 import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.entities.GameEntity;
+import edu.upc.tfg.core.entities.Player;
 import edu.upc.tfg.core.packets.client.CPlayerPosUpdatePacket;
 import edu.upc.tfg.core.packets.client.ConnectPacket;
 import edu.upc.tfg.core.packets.client.KeepAlivePacket;
@@ -23,6 +24,7 @@ public class LocalClientInstance {
 
     private String instanceOwnerName;
     private List<GameEntity> remoteEntities = new ArrayList<GameEntity>();
+    private List<GameEntity> worldState = new ArrayList<GameEntity>();
     private GameEntity localPlayer;
     private Position startPosition;
 
@@ -39,7 +41,7 @@ public class LocalClientInstance {
     }
 
     public void spawnLocalPlayer(Position pos, int entityId) {
-        localPlayer = new GameEntity(instanceOwnerName, entityId, pos);
+        localPlayer = new GameEntity(entityId, pos);
         startPosition = new Position(pos.getPositionX(), pos.getPositionY());
         logger.info("[LocalWorld "+instanceOwnerName+"] spawin local player - entityId: "+entityId+" x: "+pos.getPositionX()+" y: "+pos.getPositionY());
         logger.info("[LocalWorld "+instanceOwnerName+"] Starting game loop...");
@@ -71,7 +73,12 @@ public class LocalClientInstance {
     }
 
     public void removeEntity(int entityId) {
-
+        for(int i = 0; i < remoteEntities.size(); i++) {
+            if(remoteEntities.get(i).getEntityId() == entityId) {
+                remoteEntities.remove(i);
+                break;
+            }
+        }
     }
 
     public void initGameLoop() {
@@ -132,5 +139,9 @@ public class LocalClientInstance {
         new GameClient("localhost", port, "p2pclient"+instanceOwnerName).run(); //TODO cambiar ip
         isLiveInstance = false;
         currentInstanceId = instanceId;
+    }
+
+    public void updateWorldState(List<GameEntity> entities) {
+        this.worldState = entities;
     }
 }

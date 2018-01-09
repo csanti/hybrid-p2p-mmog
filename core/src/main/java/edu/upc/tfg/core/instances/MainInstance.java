@@ -86,17 +86,27 @@ public class MainInstance extends MasterGameInstance {
         }
 
         if ((currentMillis - lastUpdateMilis) > 50) {
+            List<GameEntity> newWS = new ArrayList<GameEntity>();
             for(Player player : playingPlayerList) {
-                // generar world state packet
+                newWS.add(new GameEntity(player.getEntityId(), player.getPosition()));
             }
-            sendToAllPlayers(new EntityPosUpdatePacket(entityId, position), entityId);
+            sendToAllPlayers(new WorldStatePacket(newWS, newWS.size()), entityId);
             lastUpdateMilis = currentMillis;
         }
     }
 
     @Override
     public void removeEntity(int entityId) {
-
+        for(int i = 0; i < playingPlayerList.size(); i++) {
+            if(playingPlayerList.get(i).getEntityId() == entityId) {
+                // delete entity
+                playingPlayerList.remove(i);
+                playerList.remove(i);
+                break;
+            }
+        }
+        logger.info("Removed form world. playing: "+playingPlayerList.size()+" playerList: "+playerList.size());
+        sendToAllPlayers(new RemoveEntityPacket(entityId), entityId);
     }
 
     @Override

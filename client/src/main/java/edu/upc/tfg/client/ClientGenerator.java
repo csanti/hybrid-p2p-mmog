@@ -15,12 +15,14 @@ public class ClientGenerator {
     public static void main(final String[] args) {
         logger.info("Entry point");
         int numClients = 10;
+        int modoOperacion = 0;
 
         if (args.length == 0) {
-            logger.info("No has introducido argumentos");
+            logger.info("No has introducido argumentos - modo por defecto");
         }
         else {
-            numClients = Integer.parseInt(args[0]);
+            modoOperacion = Integer.parseInt(args[0]);
+            numClients = Integer.parseInt(args[1]);
         }
 
         PacketMapping.mapClientPackets();
@@ -28,28 +30,36 @@ public class ClientGenerator {
 
         List<GameClient> activeClients = new ArrayList<GameClient>();
         try {
-            int i = 0;
-            while(true) {
-                int randomNum = 0 + (int)(Math.random() * 100);
 
-                if(activeClients.size() < numClients && randomNum < 50) {
-                    logger.info("Iniciando cliente nº"+i);
-                    GameClient newGameClient = new GameClient("localhost", 8182, "bot"+i);
-                    activeClients.add(newGameClient);
-                    newGameClient.run();
-                    i++;
-                }
-                Thread.sleep(1000);
+            /* --------------------------------- modo 0 ------------------------------------ */
+            if(modoOperacion == 0) {
+                new GameClient("147.83.118.108", 8182, "mainBot").run();
+            }
+            /* --------------------------------- modo 1 ------------------------------------ */
+            else if(modoOperacion == 1) {
+                int i = 0;
+                while(true) {
+                    int randomNum = 0 + (int)(Math.random() * 100);
 
-
-                if(randomNum > 70 && activeClients.size() > 1) {
-                    int clientToRemove = 0;
-                    if(activeClients.size() > 2) {
-                        clientToRemove = 0 + (int)(Math.random() * activeClients.size() - 1);
+                    if(activeClients.size() < numClients && randomNum < 50) {
+                        logger.info("Iniciando cliente nº"+i);
+                        GameClient newGameClient = new GameClient("localhost", 8182, "bot"+i);
+                        activeClients.add(newGameClient);
+                        newGameClient.run();
+                        i++;
                     }
-                    logger.info("Parando cliente en posición "+ clientToRemove);
-                    activeClients.get(clientToRemove).stop();
-                    activeClients.remove(clientToRemove);
+                    Thread.sleep(1000);
+
+
+                    if(randomNum > 70 && activeClients.size() > 1) {
+                        int clientToRemove = 0;
+                        if(activeClients.size() > 2) {
+                            clientToRemove = 0 + (int)(Math.random() * activeClients.size() - 1);
+                        }
+                        logger.info("Parando cliente en posición "+ clientToRemove);
+                        activeClients.get(clientToRemove).stop();
+                        activeClients.remove(clientToRemove);
+                    }
                 }
             }
         } catch(Exception ex) {

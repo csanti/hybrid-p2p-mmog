@@ -32,13 +32,13 @@ public class Server {
             if(s[0].equals("s")) {
                 List<Player> playerList = mainInstance.getPlayerList();
                 List<Player> playingList = mainInstance.getPlayingPlayerList();
-                System.out.println("--------------------------------------------------------------------------------------");
+                System.out.println("-------------------------------------------------------");
                 System.out.println("Player list count = "+playerList.size());
                 System.out.println("Player on main instance count = "+playingList.size());
                 for(Player p : playerList) {
                     System.out.println("Username: "+p.getName()+" - Status: "+p.getStatus()+" - InstanceId: "+p.getInstanceId()+" - EntityId: "+p.getEntityId());
                 }
-                System.out.println("--------------------------------------------------------------------------------------");
+                System.out.println("-------------------------------------------------------");
 
             }
             else if(s[0].equals("d")) {
@@ -57,13 +57,13 @@ public class Server {
             }
             else if(s[0].equals("i")) {
                 List<DelegatedInstanceInfo> delegatedInstances = mainInstance.getDelegatedInstances();
-                System.out.println("--------------------------------------------------------------------------------------");
+                System.out.println("-------------------------------------------------------");
                 System.out.println("Number of delegated instances = "+delegatedInstances.size());
 
                 for(DelegatedInstanceInfo d : delegatedInstances) {
                     System.out.println("ServerEndP: "+d.getServerIp()+" - ServerPort: "+d.getServerPort()+" - ConnectedPlayers: "+d.getPlayerList().size());
                 }
-                System.out.println("--------------------------------------------------------------------------------------");
+                System.out.println("-------------------------------------------------------");
             }
         }
 

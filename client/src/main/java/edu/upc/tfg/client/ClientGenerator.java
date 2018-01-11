@@ -15,11 +15,11 @@ public class ClientGenerator {
 
     public static void main(final String[] args) {
         logger.info("Entry point");
-        int numClients = 10;
-        int intervClients = 2;
-        int intervTimeSeconds = 5;
+        int numClients = 1000;
+        int intervClients = 100;
+        int intervTimeSeconds = 61*5;
         int modoOperacion = 2;
-        String serverIP = "localhost";
+        String serverIP = "147.83.118.108";
         String p2pServerIP = "147.83.118.109";
 
         if (args.length == 0) {
@@ -85,6 +85,14 @@ public class ClientGenerator {
                         intervalCounter = 0;
                     }
                     Thread.sleep(50);
+                }
+            }
+            /* --------------------------------- modo 3 ------------------------------------ */
+            else if(modoOperacion == 3) {
+                for(int i = 0; i < numClients; i++)
+                {
+                    new GameClient(serverIP, 8182, "bot"+i).run();
+                    Thread.sleep(2000);
                 }
             }
         } catch(Exception ex) {

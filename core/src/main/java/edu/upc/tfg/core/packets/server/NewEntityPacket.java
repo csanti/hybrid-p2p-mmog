@@ -1,6 +1,7 @@
 package edu.upc.tfg.core.packets.server;
 
 import edu.upc.tfg.core.GameMessage;
+import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.instances.LocalClientInstance;
 import edu.upc.tfg.core.packets.ServerPacket;
 import edu.upc.tfg.core.utils.Position;
@@ -53,12 +54,13 @@ public class NewEntityPacket extends ServerPacket {
         payload.writeBytes(nameBuf);
         payload.writeInt(initialPosX);
         payload.writeInt(initialPosY);
-        logger.info("[SEND] New entity - EID: "+entityId+" name: "+name+" x: "+initialPosX+" y: "+initialPosY);
+        //logger.info("[SEND] New entity - EID: "+entityId+" name: "+name+" x: "+initialPosX+" y: "+initialPosY);
         return buildGameMessage(this.getClass());
     }
 
     @Override
     public void handle(ChannelHandlerContext ctx, LocalClientInstance isnt) {
-        logger.info("[RECV] New entity - EID: "+entityId+" name: "+name+" x: "+initialPosX+" y: "+initialPosY);
+        //logger.info("[RECV] New entity - EID: "+entityId+" name: "+name+" x: "+initialPosX+" y: "+initialPosY);
+        isnt.spawnEntity(new GameEntity(entityId, new Position(initialPosX, initialPosY)));
     }
 }

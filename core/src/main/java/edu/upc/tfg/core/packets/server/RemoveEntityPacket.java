@@ -34,7 +34,7 @@ public class RemoveEntityPacket extends ServerPacket {
 
     @Override
     public void handle(ChannelHandlerContext ctx, LocalClientInstance inst) {
-        logger.info("RemoveEIDPacket eid: "+entityId);
+        //logger.info("RemoveEIDPacket eid: "+entityId);
         inst.removeEntity(entityId);
     }
 }

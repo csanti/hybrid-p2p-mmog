@@ -29,13 +29,13 @@ public class ConnectPacket extends ClientPacket {
     public GameMessage write() {
         // pasar el clientname a bytes y copiarlo a payload
         this.payload = Unpooled.wrappedBuffer(clientName.getBytes());
-        logger.info("[SEND] ClientConnection request with username: "+clientName);
+        //logger.info("[SEND] ClientConnection request with username: "+clientName);
         return buildGameMessage(this.getClass());
     }
 
     @Override
     public void handle(ClientConnection conn, MasterGameInstance inst) {
-        logger.info("[RECV] ClientConnection request from: "+clientName);
+        //logger.info("[RECV] ClientConnection request from: "+clientName);
         inst.spawnEntity(clientName, conn);
     }
 }

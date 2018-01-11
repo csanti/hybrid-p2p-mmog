@@ -1,5 +1,6 @@
 package edu.upc.tfg.core.instances;
 
+import edu.upc.tfg.core.Global;
 import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.entities.GameEntity;
 import edu.upc.tfg.core.entities.Player;
@@ -57,7 +58,7 @@ public class LocalClientInstance {
 
     public void spawnEntity(GameEntity entity) {
         remoteEntities.add(entity);
-        logger.info("[LocalWorld "+instanceOwnerName+"] spawning entity - entityId: "+entity.getEntityId()+" x: "+entity.getPosition().getPositionX()+" y: "+entity.getPosition().getPositionY());
+        //logger.info("[LocalWorld "+instanceOwnerName+"] spawning entity - entityId: "+entity.getEntityId()+" x: "+entity.getPosition().getPositionX()+" y: "+entity.getPosition().getPositionY());
     }
 
 
@@ -119,11 +120,9 @@ public class LocalClientInstance {
     }
 
     public void initNewDelegatedInstance(int instanceId, int port, int maxConnections, int duration) {
-
-        // parar game loop
         try {
             serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, port).write());
-            new GameServer(new DelegatedInstance(instanceId)).run(port);
+            new GameServer(new DelegatedInstance(instanceId)).run(Global.getInstance().P2P_SERVER_IP, port);
             isLiveInstance = false;
             servingInstance = true;
             currentInstanceId = instanceId;
@@ -135,7 +134,7 @@ public class LocalClientInstance {
 
     }
 
-    public void stablishConnectionWithNewP2PServer(String ip, int port, int instanceId) {
+    public void establishConnectionWithNewP2PServer(String ip, int port, int instanceId) {
         new GameClient("localhost", port, "p2pclient"+instanceOwnerName).run(); //TODO cambiar ip
         isLiveInstance = false;
         currentInstanceId = instanceId;

@@ -22,7 +22,7 @@ public class GameServer {
         this.instance= instance;
     }
 
-    public void run(int port) throws Exception {
+    public void run(String ip, int port) throws Exception {
         final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         final EventLoopGroup workerGroup = new NioEventLoopGroup(2);
 
@@ -42,11 +42,11 @@ public class GameServer {
                     pipeline.addLast(new GameServerHandler(instance));
                 }
             });
-
-            b.bind("localhost", port).addListener(new ChannelFutureListener() {
+            logger.info("Trying to bind to "+ip+":"+port);
+            b.bind(ip, port).addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if(channelFuture.isSuccess()) {
-                        logger.info("Server listening: "+channelFuture.channel().localAddress());
+                        logger.info("Server listening");
                     } else {
                         logger.error("Could not bind to host");
                     }

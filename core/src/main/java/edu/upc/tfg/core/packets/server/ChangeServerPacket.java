@@ -63,7 +63,7 @@ public class ChangeServerPacket extends ServerPacket {
     public void handle(ChannelHandlerContext ctx, LocalClientInstance inst) {
         logger.info("[RECV] ChangeServerPacket to - op:"+op+" ip: "+serverIp+" port: "+serverPort+" instanceId: "+instanceId);
         if(op == 0) {
-            inst.stablishConnectionWithNewP2PServer(serverIp, serverPort, instanceId);
+            inst.establishConnectionWithNewP2PServer(serverIp, serverPort, instanceId);
         }
 
     }

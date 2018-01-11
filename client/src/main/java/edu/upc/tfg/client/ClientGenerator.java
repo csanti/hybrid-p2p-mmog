@@ -1,5 +1,6 @@
 package edu.upc.tfg.client;
 
+import edu.upc.tfg.core.Global;
 import edu.upc.tfg.core.client.GameClientHandler;
 import edu.upc.tfg.core.client.GameClient;
 import edu.upc.tfg.core.packets.PacketMapping;
@@ -15,15 +16,23 @@ public class ClientGenerator {
     public static void main(final String[] args) {
         logger.info("Entry point");
         int numClients = 10;
-        int modoOperacion = 0;
+        int intervClients = 2;
+        int intervTimeSeconds = 5;
+        int modoOperacion = 2;
+        String serverIP = "localhost";
+        String p2pServerIP = "147.83.118.109";
 
         if (args.length == 0) {
             logger.info("No has introducido argumentos - modo por defecto");
         }
         else {
             modoOperacion = Integer.parseInt(args[0]);
-            numClients = Integer.parseInt(args[1]);
+            serverIP = args[1];
+            numClients = Integer.parseInt(args[2]);
+            p2pServerIP = args[3];
         }
+
+        Global.getInstance().P2P_SERVER_IP = p2pServerIP;
 
         PacketMapping.mapClientPackets();
         PacketMapping.mapServerPackets();
@@ -33,7 +42,7 @@ public class ClientGenerator {
 
             /* --------------------------------- modo 0 ------------------------------------ */
             if(modoOperacion == 0) {
-                new GameClient("147.83.118.108", 8182, "mainBot").run();
+                new GameClient(serverIP, 8182, "mainBot").run();
             }
             /* --------------------------------- modo 1 ------------------------------------ */
             else if(modoOperacion == 1) {
@@ -43,7 +52,7 @@ public class ClientGenerator {
 
                     if(activeClients.size() < numClients && randomNum < 50) {
                         logger.info("Iniciando cliente nº"+i);
-                        GameClient newGameClient = new GameClient("localhost", 8182, "bot"+i);
+                        GameClient newGameClient = new GameClient(serverIP, 8182, "bot"+i);
                         activeClients.add(newGameClient);
                         newGameClient.run();
                         i++;
@@ -60,6 +69,22 @@ public class ClientGenerator {
                         activeClients.get(clientToRemove).stop();
                         activeClients.remove(clientToRemove);
                     }
+                }
+            }
+            /* --------------------------------- modo 2 ------------------------------------ */
+            else if(modoOperacion == 2) {
+                int intervalCounter = 0;
+                for(int i = 0; i < numClients; i++)
+                {
+                    new GameClient(serverIP, 8182, "bot"+i).run();
+                    intervalCounter++;
+                    if(intervalCounter == intervClients) {
+                        logger.info("Sleeping for "+intervTimeSeconds+" seconds. Total clients started: "+(i+1));
+                        Thread.sleep(intervTimeSeconds * 1000);
+                        logger.info("Starting interval");
+                        intervalCounter = 0;
+                    }
+                    Thread.sleep(50);
                 }
             }
         } catch(Exception ex) {

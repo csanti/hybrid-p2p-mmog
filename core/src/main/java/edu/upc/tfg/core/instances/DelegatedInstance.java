@@ -15,7 +15,6 @@ import java.util.List;
 
 public class DelegatedInstance extends MasterGameInstance {
     private static final Logger logger = Logger.getLogger(DelegatedInstance.class.getName());
-    private List<Player> playerList = new ArrayList<Player>();
     private List<Player> playingPlayerList = new ArrayList<Player>();
 
     private int instanceId;
@@ -59,7 +58,6 @@ public class DelegatedInstance extends MasterGameInstance {
         // enviar al jugador la posicion en la que aparecerá
         newPlayer.getCon().sendGameMessage(new SpawnPositionPacket(lastEID + 1, spawnPosition).write());
 
-        playerList.add(newPlayer);
         playingPlayerList.add(newPlayer);
         con.setPlayer(newPlayer);
 

@@ -35,12 +35,12 @@ public class SpawnPositionPacket extends ServerPacket {
         payload.writeInt(entityId);
         payload.writeInt(positionX);
         payload.writeInt(positionY);
-        logger.info("[SEND] Spawn position - EID: "+entityId+" x: "+positionX+" y: "+positionY);
+        //logger.info("[SEND] Spawn position - EID: "+entityId+" x: "+positionX+" y: "+positionY);
         return buildGameMessage(this.getClass());
     }
 
     public void handle(ChannelHandlerContext ctx, LocalClientInstance inst) {
-        logger.info("[RECV] Spawn position - EID: "+entityId+" x: "+positionX+" y: "+positionY);
+        //logger.info("[RECV] Spawn position - EID: "+entityId+" x: "+positionX+" y: "+positionY);
         inst.spawnLocalPlayer(new Position(positionX, positionY), entityId); //TODO hace falta pasar instancia Position?
 
     }

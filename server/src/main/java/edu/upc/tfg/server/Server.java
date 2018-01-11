@@ -21,7 +21,12 @@ public class Server {
         //main instance
         MainInstance mainInstance = new MainInstance();
 
-        new GameServer(mainInstance).run(8182);
+        String ip = "localhost";
+        if(args.length > 0) {
+            ip = args[0];
+        }
+
+        new GameServer(mainInstance).run(ip, 8182);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -64,6 +69,9 @@ public class Server {
                     System.out.println("ServerEndP: "+d.getServerIp()+" - ServerPort: "+d.getServerPort()+" - ConnectedPlayers: "+d.getPlayerList().size());
                 }
                 System.out.println("-------------------------------------------------------");
+            }
+            else if(s[0].equals("r")) {
+
             }
         }
 

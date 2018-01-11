@@ -87,8 +87,13 @@ public class MainInstance extends MasterGameInstance {
 
         if ((currentMillis - lastUpdateMilis) > 50) {
             List<GameEntity> newWS = new ArrayList<GameEntity>();
+            int playerStatesToSend = 50 + (int)(Math.random()*30);
             for(Player player : playingPlayerList) {
                 newWS.add(new GameEntity(player.getEntityId(), player.getPosition()));
+                // para que la simulación se asemeje más a la realidad, no se enviará el estado de más (50-80) entidades
+                if(newWS.size() >= playerStatesToSend) {
+                    break;
+                }
             }
             sendToAllPlayers(new WorldStatePacket(newWS, newWS.size()), entityId);
             lastUpdateMilis = currentMillis;

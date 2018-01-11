@@ -121,8 +121,8 @@ public class LocalClientInstance {
 
     public void initNewDelegatedInstance(int instanceId, int port, int maxConnections, int duration) {
         try {
-            serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, port).write());
             new GameServer(new DelegatedInstance(instanceId)).run(Global.getInstance().P2P_SERVER_IP, port);
+            serverCtx.writeAndFlush(new ServerCreationResultPacket(instanceId, 0, Global.getInstance().P2P_SERVER_IP, port).write());
             isLiveInstance = false;
             servingInstance = true;
             currentInstanceId = instanceId;

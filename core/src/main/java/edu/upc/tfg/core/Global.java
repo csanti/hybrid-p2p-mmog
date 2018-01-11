@@ -11,7 +11,8 @@ public class Global {
 
     public static Global getInstance() {
         if(instance == null) {
-            return new Global();
+            instance = new Global();
+            return instance;
         }
         else {
             return instance;

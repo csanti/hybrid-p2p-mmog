@@ -60,6 +60,26 @@ public class Server {
                     System.out.println("Error parsing command: "+ex.toString());
                 }
             }
+            else if(s[0].equals("d2")) {
+                try {
+                    int numDelegatedInstances = Integer.parseInt(s[1]);
+                    int numDelegatedPlayersPerInstance = Integer.parseInt(s[2]);
+                    if(numDelegatedPlayersPerInstance >= 2 && numDelegatedInstances > 0){
+                        for(int i = 0; i < numDelegatedInstances; i++) {
+                            logger.info("Delegating instance "+i+" with "+numDelegatedPlayersPerInstance+" players");
+                            mainInstance.delegateInstance(numDelegatedPlayersPerInstance);
+                            Thread.sleep(5000);
+                        }
+                        logger.info("Delegation completed. Total of "+(numDelegatedInstances*numDelegatedPlayersPerInstance)+" players delegated");
+                    }
+                    else {
+                        System.out.println("Can't delegate less than 2 players and 1 instance");
+                    }
+
+                } catch(Exception ex) {
+                    System.out.println("Error parsing command: "+ex.toString());
+                }
+            }
             else if(s[0].equals("i")) {
                 List<DelegatedInstanceInfo> delegatedInstances = mainInstance.getDelegatedInstances();
                 System.out.println("-------------------------------------------------------");

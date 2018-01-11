@@ -162,8 +162,6 @@ public class MainInstance extends MasterGameInstance {
 
 
         newInstanceInfo = new DelegatedInstanceInfo(instanceCounter+1, delegatedPlayers, serverEid);
-        // TODO la ip del servidor hay que cojerla de otra forma
-        newInstanceInfo.setServerIp(serverPlayer.getCon().getCtx().channel().remoteAddress().toString());
         delegatedInstances.add(newInstanceInfo);
 
 
@@ -194,7 +192,7 @@ public class MainInstance extends MasterGameInstance {
         // intentarlo con otro cliente ??
     }
 
-    public void notifyPlayersOfNewServer(int instanceId, int serverPort) {
+    public void notifyPlayersOfNewServer(int instanceId, String serverIp ,int serverPort) {
         // el server se ha creado, pero puede haber excepcion inmediatamente
         logger.info("Notifying players of instanceId "+instanceId);
 
@@ -206,6 +204,7 @@ public class MainInstance extends MasterGameInstance {
             }
         }
 
+        instance.setServerIp(serverIp);
         instance.setServerPort(serverPort);
 
         for(Player player : instance.getPlayerList()) {

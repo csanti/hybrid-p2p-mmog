@@ -135,7 +135,7 @@ public class LocalClientInstance {
     }
 
     public void establishConnectionWithNewP2PServer(String ip, int port, int instanceId) {
-        new GameClient("localhost", port, "p2pclient"+instanceOwnerName).run(); //TODO cambiar ip
+        new GameClient(ip, port, "p2pclient"+instanceOwnerName).run();
         isLiveInstance = false;
         currentInstanceId = instanceId;
     }
